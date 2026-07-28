@@ -8,8 +8,9 @@
 
 * { box-sizing: border-box; }
 body { margin: 0; min-width: 320px; min-height: 100vh; background: radial-gradient(circle at top, #0b1730 0%, #050b16 42%); }
-button, select { font: inherit; }
+button, select, input { font: inherit; }
 button { cursor: pointer; }
+button:disabled { cursor: wait; opacity: .65; }
 
 .app-shell { min-height: 100vh; }
 .topbar, .toolbar, .content { padding-left: clamp(18px, 7vw, 108px); padding-right: clamp(18px, 7vw, 108px); }
@@ -22,13 +23,17 @@ h1 span { color: #17d4ad; }
 .brand-block p { margin: 5px 0 0; color: #8290a9; font-size: 13px; }
 .live-pill { color: #20d9b1; border: 1px solid #0d725f; border-radius: 999px; padding: 5px 9px; font-size: 11px; font-weight: 800; }
 .header-actions { display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
-.button { display: inline-flex; align-items: center; gap: 8px; border: 1px solid #2a3852; color: #dfe9f6; background: #152036; padding: 11px 17px; border-radius: 999px; font-weight: 750; }
+.button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: 1px solid #2a3852; color: #dfe9f6; background: #152036; padding: 11px 17px; border-radius: 999px; font-weight: 750; }
 .button:hover { border-color: #3d526f; transform: translateY(-1px); }
 .button.accent { color: #05201a; background: #19d5ad; border-color: #19d5ad; box-shadow: 0 0 22px #19d5ad33; }
 .button.small { padding: 8px 13px; border-radius: 9px; font-size: 13px; }
+.spin { animation: spin .8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
 
-.toolbar { min-height: 54px; display: flex; align-items: center; justify-content: space-between; gap: 16px; border-bottom: 1px solid #172238; color: #8290a9; font-size: 12px; text-transform: uppercase; letter-spacing: .08em; }
-.timestamp, .toolbar-right, .view-toggle, .section-heading > div, .threshold-strip { display: flex; align-items: center; gap: 9px; }
+.toolbar { min-height: 68px; display: flex; align-items: center; justify-content: space-between; gap: 16px; border-bottom: 1px solid #172238; color: #8290a9; font-size: 12px; text-transform: uppercase; letter-spacing: .08em; }
+.tracker-stack { display: grid; gap: 6px; }
+.timestamp, .view-counter, .toolbar-right, .view-toggle, .section-heading > div, .threshold-strip { display: flex; align-items: center; gap: 9px; }
+.view-counter { color: #6f7e97; }
 .toolbar-right { gap: 18px; }
 .view-toggle { background: #111a2c; border: 1px solid #26344e; border-radius: 999px; padding: 3px; }
 .view-toggle button { display: flex; align-items: center; gap: 6px; border: 0; border-radius: 999px; background: transparent; color: #74839f; padding: 7px 12px; font-weight: 750; }
@@ -37,6 +42,8 @@ h1 span { color: #17d4ad; }
 .auto-refresh::first-letter { color: #18d1a8; }
 
 .content { padding-top: 28px; padding-bottom: 64px; }
+.notice { margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; gap: 16px; border: 1px solid #28524d; border-radius: 12px; background: #0b2425; color: #bdeee4; padding: 11px 14px; font-size: 13px; }
+.notice button { border: 0; background: transparent; color: #83b8ae; padding: 2px; }
 .section-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; color: #91a1bb; font-size: 13px; font-weight: 700; }
 .threshold-strip { margin-bottom: 14px; padding: 10px 14px; border: 1px solid #25344d; border-radius: 12px; background: #0d1627; color: #aebad0; font-size: 13px; }
 .threshold-strip span { border: 1px solid #6b3148; background: #271321; color: #ff6d96; border-radius: 999px; padding: 4px 9px; font-weight: 800; }
@@ -67,6 +74,7 @@ tbody tr:last-child td { border-bottom: 0; }
 .bar span.warning, .bar span.danger, .bar span.critical { background: #ff2e70; }
 .icon-button { border: 0; background: transparent; color: #72829e; padding: 7px; border-radius: 8px; }
 .icon-button:hover { color: #ff668e; background: #261321; }
+.empty-state { text-align: center; color: #71809a; padding: 34px; }
 
 .calculator-card { margin-top: 24px; border: 1px solid #25344d; border-radius: 18px; background: #0d1627; padding: 22px; }
 .calculator-header { display: flex; justify-content: space-between; gap: 24px; align-items: center; padding-bottom: 20px; border-bottom: 1px solid #25344d; }
@@ -84,6 +92,18 @@ select { margin-left: 10px; min-width: 330px; max-width: 42vw; color: #eaf1fb; b
 .metric-grid .highlight strong { color: #19d4aa; }
 .metric-grid small { color: #6f7e97; }
 
+.modal-backdrop { position: fixed; inset: 0; z-index: 20; display: grid; place-items: center; padding: 20px; background: #020712d9; backdrop-filter: blur(7px); }
+.modal { width: min(520px, 100%); border: 1px solid #2a3954; border-radius: 18px; background: #0c1526; box-shadow: 0 28px 90px #000a; padding: 22px; }
+.modal-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; margin-bottom: 20px; }
+.modal-header h2 { font-size: 22px; }
+.modal-header p { margin: 5px 0 0; color: #7d8da7; font-size: 13px; line-height: 1.5; }
+.modal form { display: grid; gap: 16px; }
+.modal label { display: grid; gap: 7px; color: #9eabc0; font-size: 12px; font-weight: 750; }
+.modal input { width: 100%; border: 1px solid #31415d; border-radius: 9px; background: #07101f; color: #eef5ff; padding: 11px 12px; outline: none; }
+.modal input:focus { border-color: #19d5ad; box-shadow: 0 0 0 3px #19d5ad1f; }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.modal-actions { display: flex; justify-content: flex-end; gap: 10px; padding-top: 4px; }
+
 @media (max-width: 980px) {
   .topbar { align-items: flex-start; flex-direction: column; padding-top: 22px; padding-bottom: 22px; }
   .header-actions { justify-content: flex-start; }
@@ -99,6 +119,8 @@ select { margin-left: 10px; min-width: 330px; max-width: 42vw; color: #eaf1fb; b
   .section-heading { align-items: flex-start; }
   .threshold-strip { align-items: flex-start; flex-wrap: wrap; }
   .threshold-strip small { width: 100%; margin-left: 0; }
-  .metric-grid { grid-template-columns: 1fr; }
-  .calculator-card { padding: 16px; }
+  .metric-grid, .form-grid { grid-template-columns: 1fr; }
+  .calculator-card, .modal { padding: 16px; }
+  .modal-actions { flex-direction: column-reverse; }
+  .modal-actions .button { width: 100%; }
 }
